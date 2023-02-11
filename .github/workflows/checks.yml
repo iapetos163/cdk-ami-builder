@@ -1,0 +1,34 @@
+name: 'Checks'
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  checks:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test --ci --reporters=jest-junit
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          reporter: jest-junit
+          path: junit.xml
+          name: Unit Tests

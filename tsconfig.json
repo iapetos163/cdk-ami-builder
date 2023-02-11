@@ -18,13 +18,13 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "experimentalDecorators": true,
+    "outDir": "dist",
     "strictPropertyInitialization": false,
     "typeRoots": [
       "./node_modules/@types"
     ]
   },
-  "exclude": [
-    "node_modules",
-    "cdk.out"
+  "include": [
+    "src"
   ]
 }

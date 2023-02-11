@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSave": true,
+  "[typescript][json][javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[hcl]": {
+    "editor.defaultFormatter": "fredwangwang.vscode-hcl-format"
+  },
+}
