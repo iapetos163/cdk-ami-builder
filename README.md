@@ -1,6 +1,7 @@
 # AMI Builder
 
-AWS CDK construct for creating AMIs using HashiCorp Packer.
+AWS CDK construct for creating AMIs using
+[HashiCorp Packer](https://developer.hashicorp.com/packer/docs).
 
 This construct enables you to define a Packer build environment
 as part of your CDK project and use the built instances.
@@ -35,6 +36,66 @@ if (myCoolImage) {
 
 ## Construct Props
 
-TODO
+### buildEnvDir
 
-[Refer to source](src/index.ts)
+• **buildEnvDir**: `string`
+
+The path of the directory containing the Packer file
+and any build assets
+
+See [example-build-env](./example-build-env/)
+for an example
+___
+
+### buildInstanceSubnet
+
+• `Optional` **buildInstanceSubnet**: `ISubnet`
+
+The VPC subnet in which the Packer build instance should be launched
+
+**`Default`**
+
+No restriction on the subnet
+
+___
+
+### imagePrefix
+
+• **imagePrefix**: `string`
+
+A prefix string for the names of the built AMIs
+
+___
+
+### packerFileName
+
+• **packerFileName**: `string`
+
+The name of the [Packer file](https://developer.hashicorp.com/packer/docs/templates/hcl_templates),
+relative to `buildEnvDir`
+
+See [example.pkr.hcl](./example-build-env/example.pkr.hcl)
+for an example
+
+### rootDeviceName
+
+• `Optional` **rootDeviceName**: `string`
+
+The name of the block device to which the root volume is mapped.
+In most cases this can be left unspecified.
+
+**`Default`**
+
+`'/dev/sda1'`
+
+___
+
+### schedule
+
+• `Optional` **schedule**: `Schedule`
+
+A schedule on which new image versions should be built automatically
+
+**`Default`**
+
+New versions are built only when the build definition changes

@@ -51,6 +51,9 @@ export interface AmiBuilderProps {
   /**
    * The path of the directory containing the Packer file
    * and any build assets
+   *
+   * See [example-build-env](https://github.com/iapetos163/cdk-ami-builder/tree/main/example-build-env)
+   * for an example
    */
   buildEnvDir: string;
 
@@ -68,6 +71,9 @@ export interface AmiBuilderProps {
 
   /**
    * The name of the Packer file, relative to `buildEnvDir`
+   *
+   * See [example.pkr.hcl](https://github.com/iapetos163/cdk-ami-builder/tree/main/example-build-env/example.pkr.hcl)
+   * for an example
    */
   packerFileName: string;
 
