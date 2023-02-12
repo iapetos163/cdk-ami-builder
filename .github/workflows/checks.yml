@@ -8,6 +8,8 @@ jobs:
   checks:
     name: Lint & Test
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
     steps:
       - uses: actions/checkout@v3
 
@@ -32,5 +34,3 @@ jobs:
           reporter: jest-junit
           path: junit.xml
           name: Unit Tests
-        permissions:
-          checks: write
