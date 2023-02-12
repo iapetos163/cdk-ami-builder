@@ -1,12 +1,40 @@
-# Welcome to your CDK TypeScript Construct Library project
+# AMI Builder
 
-You should explore the contents of this project. It demonstrates a CDK Construct Library that includes a construct (`CdkAmiBuilder`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+AWS CDK construct for creating AMIs using HashiCorp Packer.
 
-The construct defines an interface (`CdkAmiBuilderProps`) to configure the visibility timeout of the queue.
+This construct enables you to define a Packer build environment
+as part of your CDK project and use the built instances.
 
-## Useful commands
+## Usage
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
+```ts
+import { resolve } from 'path';
+import { Duration } from 'aws-cdk-lib';
+import { Schedule } from 'aws-cdk-lib/aws-events';
+import { AmiBuilder } from 'cdk-ami-builder';
+
+// ... within a construct
+
+const builder = new AmiBuilder(this, 'MyCoolImageBuilder', {
+    buildEnvDir: resolve(__dirname, '../my-image-build-env'),
+    packerFileName: 'build.pkr.hcl',
+    imagePrefix: 'my-cool-image',
+    // Optional schedule for automated builds
+    schedule: Schedule.rate(Duration.days(7)),
+});
+
+// This might be null if fhe first build hasn't completed yet
+const myCoolImage = builder.latestImage;
+if (myCoolImage) {
+  new Instance(this, 'MyCoolInstance', {
+    machineImage: myCoolImage,
+  });
+}
+
+```
+
+## Construct Props
+
+TODO
+
+[Refer to source](src/index.ts)
