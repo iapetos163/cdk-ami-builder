@@ -17,6 +17,7 @@
   "keywords": [
     "aws",
     "cdk",
+    "awscdk",
     "packer",
     "ami",
     "image"
