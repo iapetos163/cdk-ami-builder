@@ -98,7 +98,6 @@ export class AmiBuilder extends Construct implements IGrantable {
   public readonly buildProject: Project;
   private readonly imagePrefix: string;
   private readonly accountId?: string;
-  private readonly expectImage: boolean;
 
   private getStatements() {
     return [
@@ -453,7 +452,6 @@ export class AmiBuilder extends Construct implements IGrantable {
   }
 
   public get latestImage(): IMachineImage | null {
-    if (!this.expectImage) return null;
     const lookup: LookupMachineImageProps & { owners?: string[] } = {
       name: `${this.imagePrefix}*`,
     };
