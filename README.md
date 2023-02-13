@@ -77,6 +77,8 @@ relative to `buildEnvDir`
 See [example.pkr.hcl](./example-build-env/example.pkr.hcl)
 for an example
 
+___
+
 ### rootDeviceName
 
 • `Optional` **rootDeviceName**: `string`
