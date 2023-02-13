@@ -39,8 +39,9 @@ source "amazon-ebs" "base" {
     ### Everything above here is required for the build to work ###
     # The rest of the file is an example of a simple image derived from Ubuntu 22.04
 
-    volume_type = "gp3"
-    volume_size = 32
+    delete_on_termination = true
+    volume_type           = "gp3"
+    volume_size           = 32
   }
 
   instance_type = "t3.micro"
