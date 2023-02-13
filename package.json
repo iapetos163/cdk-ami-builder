@@ -1,8 +1,9 @@
 {
   "name": "cdk-ami-builder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "repository": "https://github.com/iapetos163/cdk-ami-builder",
   "license": "MPL-2.0",
   "scripts": {
     "build": "tsc",
@@ -13,10 +14,17 @@
   "engines": {
     "node": ">=14"
   },
+  "keywords": [
+    "aws",
+    "cdk",
+    "packer",
+    "ami",
+    "image"
+  ],
   "devDependencies": {
     "@types/jest": "^29.4.0",
     "@types/node": "18.11.18",
-    "aws-cdk-lib": "2.64.0",
+    "aws-cdk-lib": "^2.41.0",
     "constructs": "^10.0.0",
     "eslint": "^8.34.0",
     "eslint-config-birbcore": "github:iapetos163/eslint-config-birbcore",
@@ -29,7 +37,7 @@
     "typescript": "~4.9.5"
   },
   "peerDependencies": {
-    "aws-cdk-lib": "2.64.0",
+    "aws-cdk-lib": "^2.41.0",
     "constructs": "^10.0.0"
   }
 }
