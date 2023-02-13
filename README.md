@@ -34,6 +34,17 @@ if (myCoolImage) {
 
 ```
 
+## Force CDK to use the latest image version
+
+By default, CDK will cache the AMI ID for `builder.latestImage` in `cdk.context.json`.
+You can override this behavior by running this command before `cdk deploy`:
+
+```
+cdk context -f --reset ami:*
+```
+
+This will force CDK to check for the latest image each time it synthesizes.
+
 ## Construct Props
 
 ### buildEnvDir
@@ -45,6 +56,7 @@ and any build assets
 
 See [example-build-env](./example-build-env/)
 for an example
+
 ___
 
 ### buildInstanceSubnet
