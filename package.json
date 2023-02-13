@@ -1,6 +1,6 @@
 {
   "name": "cdk-ami-builder",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "license": "MPL-2.0",
