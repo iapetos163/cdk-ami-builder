@@ -1,4 +1,11 @@
 src
+junit.xml
+.vscode
+.github
+/*.js
+/test
+/example-build-env
+tsconfig.json
 
 # CDK asset staging directory
 .cdk.staging
