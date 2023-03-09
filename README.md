@@ -59,6 +59,15 @@ for an example
 
 ___
 
+### buildEnvVars
+
+• `Optional` **buildEnvVars**: `Record<string, string | ISecret | IParameter>`
+
+Additional environment variables to expose to Packer.
+The values may be plain strings, Secrets Manager secrets, or SSM parameters.
+
+---
+
 ### buildInstanceSubnet
 
 • `Optional` **buildInstanceSubnet**: `ISubnet`
