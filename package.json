@@ -1,6 +1,6 @@
 {
   "name": "cdk-ami-builder",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/iapetos163/cdk-ami-builder",
