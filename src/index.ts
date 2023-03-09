@@ -55,19 +55,19 @@ export interface AmiBuilderProps {
    * See [example-build-env](https://github.com/iapetos163/cdk-ami-builder/tree/main/example-build-env)
    * for an example
    */
-  buildEnvDir: string;
+  readonly buildEnvDir: string;
 
   /**
    * The VPC subnet in which the Packer build instance should be launched
    *
    * Default: no restriction on the subnet
    */
-  buildInstanceSubnet?: ISubnet;
+  readonly buildInstanceSubnet?: ISubnet;
 
   /**
    * A prefix string for the names of the built AMIs
    */
-  imagePrefix: string;
+  readonly imagePrefix: string;
 
   /**
    * The name of the Packer file, relative to `buildEnvDir`
@@ -75,21 +75,21 @@ export interface AmiBuilderProps {
    * See [example.pkr.hcl](https://github.com/iapetos163/cdk-ami-builder/tree/main/example-build-env/example.pkr.hcl)
    * for an example
    */
-  packerFileName: string;
+  readonly packerFileName: string;
 
   /**
    * The name of the block device to which the root volume is mapped.
    * In most cases this can be left unspecified.
    * @default '/dev/sda1'
    */
-  rootDeviceName?: string;
+  readonly rootDeviceName?: string;
 
   /**
    * A schedule on which new image versions should be built automatically
    *
    * Default: New versions are built only when the build definition changes
    */
-  schedule?: Schedule;
+  readonly schedule?: Schedule;
 }
 
 export class AmiBuilder extends Construct implements IGrantable {
