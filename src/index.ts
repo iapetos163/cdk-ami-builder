@@ -24,7 +24,8 @@ import {
   ServicePrincipal,
 } from 'aws-cdk-lib/aws-iam';
 import { Asset } from 'aws-cdk-lib/aws-s3-assets';
-import { StringParameter } from 'aws-cdk-lib/aws-ssm';
+import { ISecret } from 'aws-cdk-lib/aws-secretsmanager';
+import { IParameter, StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
 const buildSpec = BuildSpec.fromObject({
@@ -47,6 +48,31 @@ const buildSpec = BuildSpec.fromObject({
   },
 });
 
+const mapEnvVars = (
+  envVars: Record<string, string | ISecret | IParameter>,
+): Record<string, BuildEnvironmentVariable> =>
+  Object.fromEntries(
+    Object.entries(envVars).map(
+      ([name, value]): [string, BuildEnvironmentVariable] => [
+        name,
+        typeof value === 'string'
+          ? {
+              type: BuildEnvironmentVariableType.PLAINTEXT,
+              value,
+            }
+          : 'secretArn' in value
+          ? {
+              type: BuildEnvironmentVariableType.SECRETS_MANAGER,
+              value: value.secretArn,
+            }
+          : {
+              type: BuildEnvironmentVariableType.PARAMETER_STORE,
+              value: value.parameterName,
+            },
+      ],
+    ),
+  );
+
 export interface AmiBuilderProps {
   /**
    * The path of the directory containing the Packer file
@@ -55,19 +81,24 @@ export interface AmiBuilderProps {
    * See [example-build-env](https://github.com/iapetos163/cdk-ami-builder/tree/main/example-build-env)
    * for an example
    */
-  buildEnvDir: string;
+  readonly buildEnvDir: string;
+
+  /**
+   * Additional environment variables to expose to Packer
+   */
+  readonly buildEnvVars?: Record<string, string | ISecret | IParameter>;
 
   /**
    * The VPC subnet in which the Packer build instance should be launched
    *
    * Default: no restriction on the subnet
    */
-  buildInstanceSubnet?: ISubnet;
+  readonly buildInstanceSubnet?: ISubnet;
 
   /**
    * A prefix string for the names of the built AMIs
    */
-  imagePrefix: string;
+  readonly imagePrefix: string;
 
   /**
    * The name of the Packer file, relative to `buildEnvDir`
@@ -75,21 +106,21 @@ export interface AmiBuilderProps {
    * See [example.pkr.hcl](https://github.com/iapetos163/cdk-ami-builder/tree/main/example-build-env/example.pkr.hcl)
    * for an example
    */
-  packerFileName: string;
+  readonly packerFileName: string;
 
   /**
    * The name of the block device to which the root volume is mapped.
    * In most cases this can be left unspecified.
    * @default '/dev/sda1'
    */
-  rootDeviceName?: string;
+  readonly rootDeviceName?: string;
 
   /**
    * A schedule on which new image versions should be built automatically
    *
    * Default: New versions are built only when the build definition changes
    */
-  schedule?: Schedule;
+  readonly schedule?: Schedule;
 }
 
 export class AmiBuilder extends Construct implements IGrantable {
@@ -349,6 +380,7 @@ export class AmiBuilder extends Construct implements IGrantable {
     const {
       packerFileName,
       buildEnvDir,
+      buildEnvVars = {},
       imagePrefix,
       buildInstanceSubnet,
       schedule,
@@ -403,6 +435,7 @@ export class AmiBuilder extends Construct implements IGrantable {
         type: BuildEnvironmentVariableType.PLAINTEXT,
         value: rootDeviceName,
       },
+      ...mapEnvVars(buildEnvVars),
     };
 
     if (buildInstanceSubnet) {
