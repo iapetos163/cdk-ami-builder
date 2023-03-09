@@ -24,7 +24,8 @@ import {
   ServicePrincipal,
 } from 'aws-cdk-lib/aws-iam';
 import { Asset } from 'aws-cdk-lib/aws-s3-assets';
-import { StringParameter } from 'aws-cdk-lib/aws-ssm';
+import { ISecret } from 'aws-cdk-lib/aws-secretsmanager';
+import { IParameter, StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
 const buildSpec = BuildSpec.fromObject({
@@ -47,6 +48,31 @@ const buildSpec = BuildSpec.fromObject({
   },
 });
 
+const mapEnvVars = (
+  envVars: Record<string, string | ISecret | IParameter>,
+): Record<string, BuildEnvironmentVariable> =>
+  Object.fromEntries(
+    Object.entries(envVars).map(
+      ([name, value]): [string, BuildEnvironmentVariable] => [
+        name,
+        typeof value === 'string'
+          ? {
+              type: BuildEnvironmentVariableType.PLAINTEXT,
+              value,
+            }
+          : 'secretArn' in value
+          ? {
+              type: BuildEnvironmentVariableType.SECRETS_MANAGER,
+              value: value.secretArn,
+            }
+          : {
+              type: BuildEnvironmentVariableType.PARAMETER_STORE,
+              value: value.parameterName,
+            },
+      ],
+    ),
+  );
+
 export interface AmiBuilderProps {
   /**
    * The path of the directory containing the Packer file
@@ -56,6 +82,11 @@ export interface AmiBuilderProps {
    * for an example
    */
   readonly buildEnvDir: string;
+
+  /**
+   * Additional environment variables to expose to Packer
+   */
+  readonly buildEnvVars?: Record<string, string | ISecret | IParameter>;
 
   /**
    * The VPC subnet in which the Packer build instance should be launched
@@ -349,6 +380,7 @@ export class AmiBuilder extends Construct implements IGrantable {
     const {
       packerFileName,
       buildEnvDir,
+      buildEnvVars = {},
       imagePrefix,
       buildInstanceSubnet,
       schedule,
@@ -403,6 +435,7 @@ export class AmiBuilder extends Construct implements IGrantable {
         type: BuildEnvironmentVariableType.PLAINTEXT,
         value: rootDeviceName,
       },
+      ...mapEnvVars(buildEnvVars),
     };
 
     if (buildInstanceSubnet) {
